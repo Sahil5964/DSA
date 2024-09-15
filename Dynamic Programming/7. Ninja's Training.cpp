@@ -1,4 +1,6 @@
-#include <bits/stdc++.h>
+// #include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
 using namespace std;
 
 int recursion(vector<vector<int>> &arr, int n, int lastTask)
@@ -17,19 +19,19 @@ int recursion(vector<vector<int>> &arr, int n, int lastTask)
 // There may be problem with this memoization.
 // This may not be solve using 1D DP.
 // Alternative, make dp[day][task] instead of dp[day]
-int memoization(vector<vector<int>> &arr, int n, int lastTask, vector<int> &dp)
+int memoization(vector<vector<int>> &arr, int n, int lastTask, vector<vector<int>> &dp)
 {
     if (n == 1)
-        return dp[1] = max({lastTask == 0 ? INT_MIN : arr[0][0], lastTask == 1 ? INT_MIN : arr[0][1], lastTask == 2 ? INT_MIN : arr[0][2]});
+        return dp[1][lastTask] = max({lastTask == 0 ? INT_MIN : arr[0][0], lastTask == 1 ? INT_MIN : arr[0][1], lastTask == 2 ? INT_MIN : arr[0][2]});
     if (n <= 0)
         return 0;
-    if (dp[n] != -1)
-        return dp[n];
+    if (dp[n][lastTask] != -1)
+        return dp[n][lastTask];
 
     int task1 = lastTask == 0 ? INT_MIN : arr[n - 1][0] + memoization(arr, n - 1, 0, dp);
     int task2 = lastTask == 1 ? INT_MIN : arr[n - 1][1] + memoization(arr, n - 1, 1, dp);
     int task3 = lastTask == 2 ? INT_MIN : arr[n - 1][2] + memoization(arr, n - 1, 2, dp);
-    return dp[n] = max({task1, task2, task3});
+    return dp[n][lastTask] = max({task1, task2, task3});
 }
 
 // May be problem in storing values in dp, it may be possible to use dp[1][x] store max of other than x.
@@ -72,7 +74,7 @@ int main()
 {
     vector<vector<int>> arr = {{1, 2, 5}, {3, 1, 1}, {3, 3, 3}};
     // vector<vector<int>> arr = {{10, 50, 1}, {5, 100, 11}};
-    vector<int> dp(arr.size() + 1, -1);
+    vector<vector<int>> dp(arr.size() + 1, vector<int> (4, -1));
     cout << space_optimization(arr, 0) << endl;
     cout << space_optimization(arr, 1) << endl;
     cout << space_optimization(arr, 2) << endl;
